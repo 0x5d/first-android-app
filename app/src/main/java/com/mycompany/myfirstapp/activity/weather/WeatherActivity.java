@@ -7,8 +7,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.myfirstapp.R;
 import com.mycompany.myfirstapp.async.AsyncTaskObserver;
+import com.mycompany.myfirstapp.model.weather.Weather;
 import com.mycompany.myfirstapp.model.weather.WeatherInfo;
 import com.mycompany.myfirstapp.service.WeatherService;
 
@@ -56,6 +58,15 @@ public class WeatherActivity extends AppCompatActivity implements AsyncTaskObser
     @Override
     public void onTaskFinished(Object response) {
         String res = (String) response;
-        // TODO: 9/4/15 Parse to a WeatherInfo and update text view with response. 
+        ObjectMapper mapper = new ObjectMapper();
+        TextView textView = new TextView(this);
+        textView.setTextSize(20);
+        try {
+            WeatherInfo weatherInfo = mapper.readValue(res, WeatherInfo.class);
+            textView.setText(weatherInfo.toString());
+        } catch (IOException e) {
+            textView.setText("Something went wrong!");
+        }
+        setContentView(textView);
     }
 }

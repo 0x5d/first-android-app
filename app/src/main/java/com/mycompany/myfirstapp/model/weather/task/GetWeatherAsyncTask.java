@@ -24,14 +24,13 @@ public class GetWeatherAsyncTask extends AsyncTask<WeatherRequest, Integer, Weat
                 .build();
         try {
             Response response = client.newCall(request).execute();
-            weatherRequest.setResponse(response.body().toString());
-            return weatherRequest;
+            weatherRequest.setResponse(response.body().string());
         }
         catch(IOException e){
             String errorResponse = "{ \"error\" : \"No weather information found for " + args[0] + "\"}";
             weatherRequest.setResponse(errorResponse);
-            return weatherRequest;
         }
+        return weatherRequest;
     }
 
     @Override
