@@ -10,13 +10,15 @@ import android.widget.TextView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.myfirstapp.R;
 import com.mycompany.myfirstapp.async.AsyncTaskObserver;
-import com.mycompany.myfirstapp.model.weather.Weather;
 import com.mycompany.myfirstapp.model.weather.WeatherInfo;
-import com.mycompany.myfirstapp.service.WeatherService;
 
 import java.io.IOException;
 
 import com.mycompany.myfirstapp.activity.MyActivity;
+import com.mycompany.myfirstapp.service.WeatherInfoService;
+
+import retrofit.Callback;
+import retrofit.Response;
 
 public class WeatherActivity extends AppCompatActivity implements AsyncTaskObserver {
 
@@ -52,7 +54,27 @@ public class WeatherActivity extends AppCompatActivity implements AsyncTaskObser
     }
 
     private void getWeather(String cityName) {
-        new WeatherService().getWeatherForCity(cityName, this);
+        WeatherInfoService weatherInfoService = new WeatherInfoService();
+        final TextView textView = new TextView(this);
+        textView.setTextSize(20);
+        try {
+            weatherInfoService.getWeatherForCity(cityName, new Callback() {
+                @Override
+                public void onResponse(Response response) {
+                    textView.setText(((WeatherInfo) response.body()).toString());
+                    setContentView(textView);
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    textView.setText("Something went wrong!");
+                    setContentView(textView);
+                }
+            });
+        } catch (IOException e) {
+            textView.setText("Something went wrong!");
+            setContentView(textView);
+        }
     }
 
     @Override

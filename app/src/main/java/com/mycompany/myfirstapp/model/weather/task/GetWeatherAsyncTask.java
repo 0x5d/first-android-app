@@ -3,7 +3,6 @@ package com.mycompany.myfirstapp.model.weather.task;
 import android.os.AsyncTask;
 
 import com.mycompany.myfirstapp.http.WeatherRequest;
-import com.mycompany.myfirstapp.model.weather.Weather;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
