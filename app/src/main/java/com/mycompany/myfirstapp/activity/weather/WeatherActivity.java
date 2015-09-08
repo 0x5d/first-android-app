@@ -7,10 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.myfirstapp.R;
-import com.mycompany.myfirstapp.async.AsyncTaskObserver;
-import com.mycompany.myfirstapp.model.weather.WeatherInfo;
 
 import java.io.IOException;
 
@@ -20,7 +17,7 @@ import com.mycompany.myfirstapp.service.WeatherInfoService;
 import retrofit.Callback;
 import retrofit.Response;
 
-public class WeatherActivity extends AppCompatActivity implements AsyncTaskObserver {
+public class WeatherActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +58,7 @@ public class WeatherActivity extends AppCompatActivity implements AsyncTaskObser
             weatherInfoService.getWeatherForCity(cityName, new Callback() {
                 @Override
                 public void onResponse(Response response) {
-                    textView.setText(((WeatherInfo) response.body()).toString());
+                    textView.setText(response.body().toString());
                     setContentView(textView);
                 }
 
@@ -75,20 +72,5 @@ public class WeatherActivity extends AppCompatActivity implements AsyncTaskObser
             textView.setText("Something went wrong!");
             setContentView(textView);
         }
-    }
-
-    @Override
-    public void onTaskFinished(Object response) {
-        String res = (String) response;
-        ObjectMapper mapper = new ObjectMapper();
-        TextView textView = new TextView(this);
-        textView.setTextSize(20);
-        try {
-            WeatherInfo weatherInfo = mapper.readValue(res, WeatherInfo.class);
-            textView.setText(weatherInfo.toString());
-        } catch (IOException e) {
-            textView.setText("Something went wrong!");
-        }
-        setContentView(textView);
     }
 }
