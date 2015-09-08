@@ -57,7 +57,7 @@ public class MyActivity extends AppCompatActivity {
 
     public void getWeather(View view) {
         Intent intent = new Intent(this, WeatherActivity.class);
-        EditText editText = (EditText) findViewById(R.id.city_name);
+        EditText editText = (EditText) findViewById(R.id.txt_city_name);
         String cityName = editText.getText().toString();
         intent.putExtra(EXTRA_CITY_NAME, cityName);
         startActivity(intent);
