@@ -26,4 +26,8 @@ public class WeatherInfoService {
     public void getWeatherForCity(String city, Callback callback) throws IOException {
         weatherInfoApi.getWeatherForCity(city).enqueue(callback);
     }
+
+    public void getWeatherForCoords(double lat, double lon, Callback callback) throws IOException {
+        weatherInfoApi.getWeatherForCoords(lat, lon).enqueue(callback);
+    }
 }

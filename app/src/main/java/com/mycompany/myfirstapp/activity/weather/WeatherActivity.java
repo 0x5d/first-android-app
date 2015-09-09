@@ -24,8 +24,15 @@ public class WeatherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         String cityName = intent.getStringExtra(MyActivity.EXTRA_CITY_NAME);
+        if(cityName != null){
+            getWeatherForCity(cityName);
+        }
+        else {
+            double lat = intent.getDoubleExtra(MyActivity.EXTRA_LAT, 0d);
+            double lon = intent.getDoubleExtra(MyActivity.EXTRA_LNG, 0d);
+            getWeatherForCoords(lat, lon);
+        }
         setContentView(R.layout.activity_weather);
-        getWeather(cityName);
     }
 
     @Override
@@ -50,12 +57,36 @@ public class WeatherActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getWeather(String cityName) {
+    private void getWeatherForCity(String cityName) {
         WeatherInfoService weatherInfoService = new WeatherInfoService();
         final TextView textView = new TextView(this);
         textView.setTextSize(20);
         try {
             weatherInfoService.getWeatherForCity(cityName, new Callback() {
+                @Override
+                public void onResponse(Response response) {
+                    textView.setText(response.body().toString());
+                    setContentView(textView);
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    textView.setText("Something went wrong!");
+                    setContentView(textView);
+                }
+            });
+        } catch (IOException e) {
+            textView.setText("Something went wrong!");
+            setContentView(textView);
+        }
+    }
+
+    private void getWeatherForCoords(double lat, double lon) {
+        WeatherInfoService weatherInfoService = new WeatherInfoService();
+        final TextView textView = new TextView(this);
+        textView.setTextSize(20);
+        try {
+            weatherInfoService.getWeatherForCoords(lat, lon, new Callback() {
                 @Override
                 public void onResponse(Response response) {
                     textView.setText(response.body().toString());
